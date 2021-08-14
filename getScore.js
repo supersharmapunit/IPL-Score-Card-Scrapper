@@ -32,30 +32,23 @@ function getData(html) {
         console.log();
         console.log();
 
-        
-            let batsManArray = searchTool(inning[i]).find('.Collapsible .batsman');
-    
-    
-            let playerRow = searchTool(batsManArray).find('tbody tr')
-            for (let j = 0; j < playerRow.length; j++) {
-                let player = searchTool(playerRow[j]).find('td');
-    
-                if (player.length >= 8) {
-                    console.log(searchTool(player[0]).text());
-                }
+
+        let batsManArray = searchTool(inning[i]).find('.Collapsible .batsman');
+
+
+        let playerRow = searchTool(batsManArray).find('tbody tr')
+        for (let j = 0; j < playerRow.length; j++) {
+            let player = searchTool(playerRow[j]).find('td');
+
+            if (player.length >= 8) {
+                console.log(searchTool(player[0]).text());
             }
-    
-    
-    
-            if (i == 0) console.log('***************  V/S  ***************');
-        
-
-
-        
+        }
+        if (i == 0) console.log('***************  V/S  ***************');
     }
-   
+
 
 }
 module.exports = {
-    fn : getData
+    fn: getData
 }
