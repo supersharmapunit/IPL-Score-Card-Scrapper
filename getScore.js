@@ -4,7 +4,6 @@ function getData(html) {
     console.log('=========================================');
     let searchTool = cheerio.load(html);
     let teamNameEle = searchTool('.name-link');
-    console.log(teamNameEle.length);
     let inning = searchTool('.Collapsible')
 
     for (let i = 0; i < inning.length; i++) {
@@ -40,7 +39,7 @@ function getData(html) {
         for (let j = 0; j < playerRow.length; j++) {
             let player = searchTool(playerRow[j]).find('td');
 
-            if (player.length >= 8) {
+            if (player.length == 8) {
                 console.log(searchTool(player[0]).text());
             }
         }
