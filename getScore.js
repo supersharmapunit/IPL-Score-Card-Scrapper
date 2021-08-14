@@ -1,24 +1,12 @@
 let cheerio = require('cheerio');
-let request = require('request');
-
-let url = 'https://www.espncricinfo.com/series/ipl-2020-21-1210595/delhi-capitals-vs-mumbai-indians-final-1237181/full-scorecard';
-request(url, cb);
-
-function cb(error, response, html) {
-    if (error) {
-        console.log(error);
-    } else if (response.statusCode == 404) {
-        console.log('Page not found');
-    } else {
-        getData(html);
-    }
-}
 
 function getData(html) {
     console.log('=========================================');
     let searchTool = cheerio.load(html);
     let teamNameEle = searchTool('.name-link');
+    console.log(teamNameEle.length);
     let inning = searchTool('.Collapsible')
+
     for (let i = 0; i < inning.length; i++) {
         let team = searchTool(teamNameEle[i]).find('.name').text();
         process.stdout.write(team);
@@ -42,20 +30,32 @@ function getData(html) {
             process.stdout.write('-');
         }
         console.log();
+        console.log();
 
-        // show batsman
-        for (let i = 0; i < inning.length; i++){
-            let batsManArray = searchTool(inning[i]).find('.Collapsible .batsman tbody tr');
-            for (let name = 0; name < batsManArray.length - 1; name++) {
-                let playerRow = searchTool(batsManArray[name]).find('td');
-                
-                if (playerRow.length == 8) {
-                    console.log(searchTool(playerRow[0]).text());
-                }
+        
+            let batsManArray = searchTool(inning[i]).find('.Collapsible .batsman');
     
+    
+            let playerRow = searchTool(batsManArray).find('tbody tr')
+            for (let j = 0; j < playerRow.length; j++) {
+                let player = searchTool(playerRow[j]).find('td');
+    
+                if (player.length >= 8) {
+                    console.log(searchTool(player[0]).text());
+                }
             }
-        }
-        if (i < teamNameEle.length - 1) console.log('***************  V/S  ***************');
-        else console.log();
+    
+    
+    
+            if (i == 0) console.log('***************  V/S  ***************');
+        
+
+
+        
     }
+   
+
+}
+module.exports = {
+    fn : getData
 }
