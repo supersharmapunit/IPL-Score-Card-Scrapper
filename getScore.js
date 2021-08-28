@@ -1,4 +1,6 @@
 let cheerio = require('cheerio');
+let path = require('path');
+let fs = require('fs')
 
 function getData(html) {
     console.log('=========================================');
@@ -40,13 +42,52 @@ function getData(html) {
             let player = searchTool(playerRow[j]).find('td');
 
             if (player.length == 8) {
-                console.log(searchTool(player[0]).text());
+                let playerName = searchTool(player[0]).text();
+                let run = searchTool(player[2]).text();
+                let ball = searchTool(player[3]).text();
+                let fours = searchTool(player[5]).text();
+                let sixes = searchTool(player[6]).text();
+                processPlayers(playerName, team, run, ball, fours, sixes);
             }
         }
         if (i == 0) console.log('***************  V/S  ***************');
     }
+}
 
+function processPlayers(playerName, teamName, run, ball, fours, sixes) {
+    let obj = {
+        playerName, teamName, run, ball, fours, sixes
+    }
 
+    let dirPath = path.join(__dirname, teamName);
+    // folder
+    if (!fs.existsSync(dirPath)) {
+        fs.mkdirSync(dirPath);
+    }
+
+    // playerFile
+    let playerFilePath = path.join(dirPath, playerName + '.json');
+    let playerArr = [];
+
+    if (!fs.existsSync(playerFilePath)) playerArr.push(obj);
+    else {
+        // append
+        playerArr = getContent(playerFilePath);
+        playerArr.push(obj);
+    }
+
+    // write in the files
+    writeContent(playerFilePath, playerArr);
+}
+
+function getContent(playerFilePath){
+    let content = fs.readFileSync(playerFilePath);
+    return JSON.parse(content);
+}
+
+function writeContent(playerFilePath, playerArr){
+    let jsonData = JSON.stringify(playerArr);
+    fs.writeFileSync(playerFilePath, jsonData);
 }
 module.exports = {
     fn: getData
